@@ -12,3 +12,6 @@
 
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
+
+# This is where tex-to-pdf magic happens. Don't check it in
+temp/
