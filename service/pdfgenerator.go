@@ -11,7 +11,10 @@ import (
 )
 
 func getArgs(texFilename string, outputDirectory string) ([]string, string) {
-	identifier := uuid.NewV4()
+	identifier, err := uuid.NewV4()
+	if err != nil {
+		return nil, ""
+	}
 	workingDirectory := fmt.Sprintf("%v/%v", outputDirectory, identifier)
 	output := fmt.Sprintf("%v/work", workingDirectory)
 	args := []string{"-synctex=1", "-interaction=nonstopmode", "-file-line-error", "-d", "-ps", "-xelatex", texFilename, fmt.Sprintf("-jobname=%v", output), "-pdflatex=pdflatex"}
@@ -19,8 +22,12 @@ func getArgs(texFilename string, outputDirectory string) ([]string, string) {
 }
 
 func writeTexToFile(tex []byte, tempdir string) (string, error) {
-	texFilename := fmt.Sprintf("%v/%v.tex", tempdir, uuid.NewV4().String())
-	err := ioutil.WriteFile(texFilename, tex, 0644)
+	identifier, err := uuid.NewV4()
+	if err != nil {
+		return "", err
+	}
+	texFilename := fmt.Sprintf("%v/%v.tex", tempdir, identifier.String())
+	err = ioutil.WriteFile(texFilename, tex, 0644)
 	if err != nil {
 		return "", err
 	}

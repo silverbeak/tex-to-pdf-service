@@ -2,8 +2,14 @@ FROM ubuntu
 
 LABEL maintainer="Kristofer Jarl <kristofer@sootsafe.com>"
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update -y
-RUN apt-get install -y latexmk texlive-latex3 texlive-science texlive-latex-extra texlive-fonts-recommended
+RUN apt-get upgrade -y
+RUN apt-get install -y latexmk \
+    texlive-science \
+    texlive-latex-extra \
+    texlive-fonts-recommended
 
 EXPOSE 50051
 
