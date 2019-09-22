@@ -7,14 +7,21 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 )
 
+func newUUID() uuid.UUID {
+	// Changes haven't been released yet. Will probably break at next release
+	identifier := uuid.NewV4()
+	// if err != nil {
+	// 	log.Fatalf("Could not generate new UUID. Error: %v", err)
+	// 	panic("Could not generate new UUID")
+	// }
+	return identifier
+}
+
 func getArgs(texFilename string, outputDirectory string) ([]string, string) {
-	identifier, err := uuid.NewV4()
-	if err != nil {
-		return nil, ""
-	}
+	identifier := newUUID()
 	workingDirectory := fmt.Sprintf("%v/%v", outputDirectory, identifier)
 	output := fmt.Sprintf("%v/work", workingDirectory)
 	args := []string{"-synctex=1", "-interaction=nonstopmode", "-file-line-error", "-d", "-ps", "-xelatex", texFilename, fmt.Sprintf("-jobname=%v", output), "-pdflatex=pdflatex"}
@@ -22,12 +29,9 @@ func getArgs(texFilename string, outputDirectory string) ([]string, string) {
 }
 
 func writeTexToFile(tex []byte, tempdir string) (string, error) {
-	identifier, err := uuid.NewV4()
-	if err != nil {
-		return "", err
-	}
+	identifier := newUUID()
 	texFilename := fmt.Sprintf("%v/%v.tex", tempdir, identifier.String())
-	err = ioutil.WriteFile(texFilename, tex, 0644)
+	err := ioutil.WriteFile(texFilename, tex, 0644)
 	if err != nil {
 		return "", err
 	}
